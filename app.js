@@ -1,5 +1,14 @@
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose');
+const config = require('./config');
+
+mongoose.connect(config.db, { useMongoClient: true },
+  (err) => {
+    if (err) return console.log(err);
+    console.log('Connected to MongoDB');
+  }
+);
 
 const app = express();
 
