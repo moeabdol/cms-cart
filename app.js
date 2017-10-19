@@ -9,6 +9,7 @@ const session          = require('express-session');
 const validator        = require('express-validator');
 
 // Connect to db
+mongoose.promise = global.promise;
 mongoose.connect(config.db, { useMongoClient: true },
   (err) => {
     if (err) return console.log(err);
