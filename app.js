@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const config = require('./config');
+const pagesRoutes = require('./routes/pages');
+const adminPagesRoutes = require('./routes/admin_pages');
 
 mongoose.connect(config.db, { useMongoClient: true },
   (err) => {
@@ -18,11 +20,8 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
 
-app.get('/', (req, res) => {
-  res.render('index', {
-    title: 'Home'
-  });
-});
+app.use('/', pagesRoutes);
+app.use('/admin', adminPagesRoutes);
 
 app.listen(3000, () => {
   console.log('Server started on port', 3000);
