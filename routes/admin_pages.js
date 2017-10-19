@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const adminPages = require('../controllers/admin_pages');
 
-router.get('/', adminPages.index);
-router.get('/add-page', adminPages.addPage);
+router.get('/pages', adminPages.index);
+router.get('/pages/new', adminPages.newPage);
+router.post('/pages/new', adminPages.createPage);
 
 module.exports = router;
