@@ -53,7 +53,7 @@ const createPage = (req, res) => {
       title: title,
       slug: slug,
       content: content,
-      sorting: 100
+      sorting: 0
     });
 
     newPage.save((err) => {
@@ -65,8 +65,28 @@ const createPage = (req, res) => {
   });
 };
 
+const reorderPages = (req, res) => {
+  const ids = req.body.id;
+
+  let count = 0;
+  for (let i = 0; i < ids.length; i++) {
+    let id = ids[i];
+    count++;
+
+    ((count) => {
+      Page.findById(id, (err, page) => {
+        page.sorting = count;
+        page.save((err) => {
+          if (err) return console.log(err);
+        });
+      });
+    })(count);
+  }
+};
+
 module.exports = {
   index,
   newPage,
-  createPage
+  createPage,
+  reorderPages
 };
