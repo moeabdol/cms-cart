@@ -1,7 +1,11 @@
 const Page = require('../models/page');
 
 const index = (req, res) => {
-  res.send('admin pages');
+  Page.find({}).sort({ sorting: 1 }).exec((err, pages) => {
+    res.render('admin/pages/index', {
+      pages: pages
+    });
+  });
 };
 
 const newPage = (req, res) => {
@@ -49,7 +53,7 @@ const createPage = (req, res) => {
       title: title,
       slug: slug,
       content: content,
-      sorting: 0
+      sorting: 100
     });
 
     newPage.save((err) => {
