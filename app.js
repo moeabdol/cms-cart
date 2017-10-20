@@ -4,8 +4,10 @@ const pagesRoutes           = require('./routes/pages');
 const bodyParser            = require('body-parser');
 const session               = require('express-session');
 const validator             = require('express-validator');
+const fileUpload            = require('express-fileupload');
 const adminPagesRoutes      = require('./routes/admin_pages');
 const adminCategoriesRoutes = require('./routes/admin_categories');
+const adminProductsRoutes   = require('./routes/admin_products');
 
 const app = express();
 
@@ -19,6 +21,9 @@ app.use(express.static(path.join(__dirname, 'node_modules')));
 
 // Set global errors variable
 app.locals.errors = null;
+
+// Configure express-fileupload middleware
+app.use(fileUpload());
 
 // Configure body-parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -58,9 +63,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', pagesRoutes);
 app.use('/admin/pages', adminPagesRoutes);
 app.use('/admin/categories', adminCategoriesRoutes);
+app.use('/admin/products', adminProductsRoutes);
+app.use('/', pagesRoutes);
 
 app.listen(3000, () => {
   console.log('Server started on port', 3000);
