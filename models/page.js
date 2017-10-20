@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('../config/database');
 
 const pageSchema = mongoose.Schema({
   title: { type: String, required: true },

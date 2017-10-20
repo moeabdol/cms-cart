@@ -1,21 +1,10 @@
 const express          = require('express');
 const path             = require('path');
-const mongoose         = require('mongoose');
-const config           = require('./config');
 const pagesRoutes      = require('./routes/pages');
 const adminPagesRoutes = require('./routes/admin_pages');
 const bodyParser       = require('body-parser');
 const session          = require('express-session');
 const validator        = require('express-validator');
-
-// Connect to db
-mongoose.promise = global.promise;
-mongoose.connect(config.db, { useMongoClient: true },
-  (err) => {
-    if (err) return console.log(err);
-    console.log('Connected to MongoDB');
-  }
-);
 
 const app = express();
 
