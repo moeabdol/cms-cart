@@ -86,7 +86,7 @@ const reorderPages = (req) => {
 };
 
 const editPage = (req, res) => {
-  Page.findOne({ slug: req.params.slug }, (err, page) => {
+  Page.findById(req.params.id, (err, page) => {
     if (err) return console.log(err);
 
     res.render('admin/pages/edit', {
@@ -106,12 +106,13 @@ const updatePage = (req, res) => {
   let slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
   if (slug === '') slug = title.replace(/\s+/g, '-').toLowerCase();
   let content = req.body.content;
-  let id = req.body.id;
+  let id = req.params.id;
 
   const errors = req.validationErrors();
 
   if (errors) {
     return res.render('admin/pages/edit', {
+      errors: errors,
       title: title,
       slug: slug,
       content: content,
