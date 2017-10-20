@@ -8,5 +8,6 @@ router.post('/pages/new', adminPages.createPage);
 router.post('/pages/reorder', adminPages.reorderPages);
 router.get('/pages/edit/:slug', adminPages.editPage);
 router.post('/pages/edit/:slug', adminPages.updatePage);
+router.get('/pages/delete/:id', adminPages.deletePage);
 
 module.exports = router;

@@ -147,11 +147,21 @@ const updatePage = (req, res) => {
   });
 };
 
+const deletePage = (req, res) => {
+  Page.findByIdAndRemove(req.params.id, (err) => {
+    if (err) return console.log(err);
+
+    req.flash('success', 'Page deleted.');
+    res.redirect('/admin/pages');
+  });
+};
+
 module.exports = {
   index,
   newPage,
   createPage,
   reorderPages,
   editPage,
-  updatePage
+  updatePage,
+  deletePage
 };
