@@ -7,5 +7,6 @@ router.get('/new', adminCategories.newCategory);
 router.post('/new', adminCategories.createCategory);
 router.get('/edit/:id', adminCategories.editCategory);
 router.post('/edit/:id', adminCategories.updateCategory);
+router.get('/delete/:id', adminCategories.deleteCategory);
 
 module.exports = router;

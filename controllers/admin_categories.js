@@ -111,10 +111,20 @@ const updateCategory = (req, res) => {
   });
 };
 
+const deleteCategory = (req, res) => {
+  Category.findByIdAndRemove(req.params.id, err => {
+    if (err) return console.log(err);
+
+    req.flash('success', 'Category deleted.');
+    res.redirect('/admin/categories');
+  });
+};
+
 module.exports = {
   index,
   newCategory,
   createCategory,
   editCategory,
-  updateCategory
+  updateCategory,
+  deleteCategory
 };
