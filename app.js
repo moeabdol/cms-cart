@@ -1,10 +1,11 @@
-const express          = require('express');
-const path             = require('path');
-const pagesRoutes      = require('./routes/pages');
-const adminPagesRoutes = require('./routes/admin_pages');
-const bodyParser       = require('body-parser');
-const session          = require('express-session');
-const validator        = require('express-validator');
+const express               = require('express');
+const path                  = require('path');
+const pagesRoutes           = require('./routes/pages');
+const bodyParser            = require('body-parser');
+const session               = require('express-session');
+const validator             = require('express-validator');
+const adminPagesRoutes      = require('./routes/admin_pages');
+const adminCategoriesRoutes = require('./routes/admin_categories');
 
 const app = express();
 
@@ -58,7 +59,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/', pagesRoutes);
-app.use('/admin', adminPagesRoutes);
+app.use('/admin/pages', adminPagesRoutes);
+app.use('/admin/categories', adminCategoriesRoutes);
 
 app.listen(3000, () => {
   console.log('Server started on port', 3000);
