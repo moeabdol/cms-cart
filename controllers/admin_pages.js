@@ -30,6 +30,7 @@ const createPage = (req, res) => {
   let content = req.body.content;
 
   const errors = req.validationErrors();
+
   if (errors) {
     return res.render('admin/pages/new', {
       errors: errors,
