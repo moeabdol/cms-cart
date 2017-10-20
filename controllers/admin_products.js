@@ -22,6 +22,24 @@ const index = (req, res) => {
   });
 };
 
+const newProduct = (req, res) => {
+  let title = '';
+  let description = '';
+  let price = '';
+
+  Category.find((err, categories) => {
+    if (err) return console.log(err);
+
+    res.render('admin/products/new', {
+      title: title,
+      description: description,
+      price: price,
+      categories: categories
+    });
+  });
+};
+
 module.exports = {
-  index
+  index,
+  newProduct
 };
