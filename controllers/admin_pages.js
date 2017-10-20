@@ -65,7 +65,7 @@ const createPage = (req, res) => {
   });
 };
 
-const reorderPages = (req, res) => {
+const reorderPages = (req) => {
   const ids = req.body.id;
 
   let count = 0;
@@ -84,9 +84,74 @@ const reorderPages = (req, res) => {
   }
 };
 
+const editPage = (req, res) => {
+  Page.findOne({ slug: req.params.slug }, (err, page) => {
+    if (err) return console.log(err);
+
+    res.render('admin/pages/edit', {
+      title: page.title,
+      slug: page.slug,
+      content: page.content,
+      id: page._id
+    });
+  });
+};
+
+const updatePage = (req, res) => {
+  req.checkBody('title', 'Title must have a value.').notEmpty();
+  req.checkBody('content', 'Content must have a value.').notEmpty();
+
+  let title = req.body.title;
+  let slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
+  if (slug === '') slug = title.replace(/\s+/g, '-').toLowerCase();
+  let content = req.body.content;
+  let id = req.body.id;
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    return res.render('admin/pages/edit', {
+      title: title,
+      slug: slug,
+      content: content,
+      id: id
+    });
+  }
+
+  Page.findOne({ slug: slug, _id: { '$ne': id } }, (err, page) => {
+    if (err) return console.log(err);
+    if (page) {
+      req.flash('danger', 'Page slug exist, choose another.');
+      return res.render('admin/pages/edit', {
+        title: title,
+        slug: slug,
+        content: content,
+        id: id
+      });
+    }
+
+    Page.findById(id, (err, page) => {
+      if (err) return console.log(err);
+
+      page.title = title;
+      page.slug = slug;
+      page.content = content;
+
+      page.save(err => {
+        if (err) return console.log(err);
+
+        req.flash('success', 'Page edited');
+        res.redirect('/admin/pages');
+      });
+    });
+  });
+};
+
 module.exports = {
   index,
   newPage,
   createPage,
-  reorderPages
+  reorderPages,
+  editPage,
+  updatePage
 };
