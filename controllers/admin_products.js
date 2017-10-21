@@ -127,8 +127,45 @@ const createProduct = (req, res) => {
   });
 };
 
+const editProduct = (req, res) => {
+  let errors;
+
+  if (req.session.errors) errors = req.session.errors;
+  req.session.errors = null;
+
+  Category.find((err, categories) => {
+    if (err) return console.log(err);
+
+    Product.findById(req.params.id, (err, product) => {
+      if (err) return console.log(err);
+
+      let galleryDir = 'public/product_images/' + product._id + '/gallery';
+      let galleryImages = null;
+
+      fs.readdir(galleryDir, (err, files) => {
+        if (err) return console.log(err);
+
+        galleryImages = files;
+
+        res.render('admin/products/edit', {
+          errors: errors,
+          id: product._id,
+          title: product.title,
+          description: product.description,
+          categories: categories,
+          cat: product.category.replace(/\s+/g, '-').toLowerCase(),
+          price: parseFloat(product.price).toFixed(2),
+          image: product.image,
+          galleryImages: galleryImages
+        });
+      });
+    });
+  });
+};
+
 module.exports = {
   index,
   newProduct,
-  createProduct
+  createProduct,
+  editProduct
 };
