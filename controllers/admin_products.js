@@ -247,11 +247,28 @@ const updateProductGallery = (req, res) => {
   res.sendStatus(200);
 };
 
+const deleteImage = (req, res) => {
+  const originalImage = 'public/product_images/' + req.query.id + '/gallery/' + req.params.image;
+  const thumbImage = 'public/product_images/' + req.query.id + '/gallery/thumbs/' + req.params.image;
+
+  fs.remove(originalImage, (err) => {
+    if (err) return console.log(err);
+
+    fs.remove(thumbImage, (err) => {
+      if (err) return console.log(err);
+
+      req.flash('success', 'Image deleted.');
+      res.redirect('/admin/products/edit/' + req.query.id);
+    });
+  });
+};
+
 module.exports = {
   index,
   newProduct,
   createProduct,
   editProduct,
   updateProduct,
-  updateProductGallery
+  updateProductGallery,
+  deleteImage
 };
