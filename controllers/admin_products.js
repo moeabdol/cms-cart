@@ -163,9 +163,77 @@ const editProduct = (req, res) => {
   });
 };
 
+const updateProduct = (req, res) => {
+  const imageFile =
+    typeof req.files.image !== 'undefined' ? req.files.image.name : '';
+
+  req.checkBody('title', 'Title must have a value.').notEmpty();
+  req.checkBody('description', 'Description must have a value.').notEmpty();
+  req.checkBody('price', 'Price must have a value.').isDecimal();
+  req.checkBody('image', 'You must upload an image.').isImage(imageFile);
+
+  let title = req.body.title;
+  let slug = title.replace(/\s+/g, '-').toLowerCase();
+  let description = req.body.description;
+  let price = req.body.price;
+  let category = req.body.category;
+  let pimage = req.body.pimage;
+  let id = req.params.id;
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    req.session.errors = errors;
+    return res.redirect('/admin/products/edit/' + id);
+  }
+
+  Product.findOne({ slug: slug, _id: { '$ne': id } }, (err, product) => {
+    if (err) return console.log(err);
+
+    if (product) {
+      req.flash('danger', 'Product title exists. choose another.');
+      return res.redirect('/admin/products/edit/' + id );
+    }
+
+    Product.findById(id, (err, product) => {
+      if (err) return console.log(err);
+
+      product.title = title;
+      product.slug = slug;
+      product.description = description;
+      product.price = parseFloat(price).toFixed(2);
+      product.category = category;
+      if (imageFile !== '') product.image = imageFile;
+
+      product.save(err => {
+        if (err) return console.log(err);
+
+        if (imageFile !== '') {
+          if (pimage !== '') {
+            fs.remove('public/product_images/' + id + '/' + pimage, (err) => {
+              if (err) return console.log(err);
+            });
+          }
+
+          const productImage = req.files.image;
+          const path = 'public/product_images/' + id + '/' + imageFile;
+
+          productImage.mv(path, (err) => {
+            if (err) return console.log(err);
+          });
+        }
+
+        req.flash('success', 'Product updated.');
+        res.redirect('/admin/products');
+      });
+    });
+  });
+};
+
 module.exports = {
   index,
   newProduct,
   createProduct,
-  editProduct
+  editProduct,
+  updateProduct
 };
