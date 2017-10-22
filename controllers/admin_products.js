@@ -230,10 +230,28 @@ const updateProduct = (req, res) => {
   });
 };
 
+const updateProductGallery = (req, res) => {
+  const productImage = req.files.file;
+  const id = req.params.id;
+  const path = 'public/product_images/' + id + '/gallery/' + productImage.name;
+  const thumbsPath = 'public/product_images/' + id + '/gallery/thumbs/' + productImage.name;
+
+  productImage.mv(path, err => {
+    if (err) return console.log(err);
+
+    resizeImg(fs.readFileSync(path), { width: 100, height: 100 }).then(buf => {
+      fs.writeFileSync(thumbsPath, buf);
+    });
+  });
+
+  res.sendStatus(200);
+};
+
 module.exports = {
   index,
   newProduct,
   createProduct,
   editProduct,
-  updateProduct
+  updateProduct,
+  updateProductGallery
 };
