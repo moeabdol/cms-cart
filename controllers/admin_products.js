@@ -263,6 +263,22 @@ const deleteImage = (req, res) => {
   });
 };
 
+const deleteProduct = (req, res) => {
+  const id = req.params.id;
+  const path = 'public/product_images/' + id;
+
+  fs.remove(path, (err) => {
+    if (err) return console.log(err);
+
+    Product.findByIdAndRemove(id, (err) => {
+      if (err) return console.log(err);
+
+      req.flash('success', 'Product deleted.');
+      res.redirect('/admin/products');
+    });
+  });
+};
+
 module.exports = {
   index,
   newProduct,
@@ -270,5 +286,6 @@ module.exports = {
   editProduct,
   updateProduct,
   updateProductGallery,
-  deleteImage
+  deleteImage,
+  deleteProduct
 };
